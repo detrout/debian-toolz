@@ -1,0 +1,58 @@
+Source: toolz
+Maintainer: Diane Trout <diane@ghic.org>
+Section: python
+Priority: optional
+Build-Depends: dh-python, python-setuptools (>= 0.6b3), python3-setuptools, python-all (>= 2.6.6-3), python3-all, debhelper (>= 9)
+Standards-Version: 3.9.6
+Homepage: http://github.com/pytoolz/toolz/
+
+Package: python-toolz
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: List processing tools and functional utilities
+ Toolz
+ =====
+ .
+ |Build Status| |Coverage Status| |Version Status| |Downloads|
+ .
+ A set of utility functions for iterators, functions, and dictionaries.
+ .
+ See the PyToolz documentation at http://toolz.readthedocs.org
+ .
+ LICENSE
+ -------
+ .
+ New BSD. See `License File <https://github.com/pytoolz/toolz/blob/master/LICENSE.txt>`__.
+ .
+ Install
+ -------
+ .
+ ``toolz`` is on the Python Package Index (PyPI):
+ .
+ ::
+
+Package: python3-toolz
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: List processing tools and functional utilities
+ Toolz
+ =====
+ .
+ |Build Status| |Coverage Status| |Version Status| |Downloads|
+ .
+ A set of utility functions for iterators, functions, and dictionaries.
+ .
+ See the PyToolz documentation at http://toolz.readthedocs.org
+ .
+ LICENSE
+ -------
+ .
+ New BSD. See `License File <https://github.com/pytoolz/toolz/blob/master/LICENSE.txt>`__.
+ .
+ Install
+ -------
+ .
+ ``toolz`` is on the Python Package Index (PyPI):
+ .
+ ::
+
