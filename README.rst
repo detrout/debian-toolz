@@ -69,7 +69,8 @@ This builds a standard wordcount function from pieces within ``toolz``:
     ...     return word.lower().rstrip(",.!:;'-\"").lstrip("'\"")
 
     >>> from toolz import compose, frequencies, partial
-    >>> wordcount = compose(frequencies, partial(map, stem), str.split)
+    >>> from toolz.curried import map
+    >>> wordcount = compose(frequencies, map(stem), str.split)
 
     >>> sentence = "This cat jumped over this other cat!"
     >>> wordcount(sentence)
@@ -78,7 +79,7 @@ This builds a standard wordcount function from pieces within ``toolz``:
 Dependencies
 ------------
 
-``toolz`` supports Python 2.6+ and Python 3.2+ with a common codebase.
+``toolz`` supports Python 2.6+ and Python 3.3+ with a common codebase.
 It is pure Python and requires no dependencies beyond the standard
 library.
 
@@ -129,9 +130,9 @@ Community
 See our `mailing list <https://groups.google.com/forum/#!forum/pytoolz>`__.
 We're friendly.
 
-.. |Build Status| image:: https://travis-ci.org/pytoolz/toolz.svg
+.. |Build Status| image:: https://travis-ci.org/pytoolz/toolz.svg?branch=master
    :target: https://travis-ci.org/pytoolz/toolz
-.. |Coverage Status| image:: https://coveralls.io/repos/pytoolz/toolz/badge.svg
+.. |Coverage Status| image:: https://coveralls.io/repos/pytoolz/toolz/badge.svg?branch=master
    :target: https://coveralls.io/r/pytoolz/toolz
 .. |Version Status| image:: https://badge.fury.io/py/toolz.svg
    :target: http://badge.fury.io/py/toolz
