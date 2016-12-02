@@ -6,3 +6,6 @@
 toolz_0.7.4.orig.tar.gz
 2d4ed38740eec29928f7756162e45f1e0b0fc547
 29155
+debianTag="debian/%e%v"
+patchedTag="patched/%e%v"
+upstreamTag="upstream/%e%u"
