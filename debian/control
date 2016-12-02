@@ -14,7 +14,7 @@ Homepage: http://github.com/pytoolz/toolz/
 Package: python-toolz
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}
-Description: List processing tools and functional utilities
+Description: List processing tools and functional utilities for Python 2
  A set of utility functions for iterators, functions, and
  dictionaries.  These functions interoperate well and form the
  building blocks of common data analytic operations. They extend the
@@ -26,7 +26,7 @@ Description: List processing tools and functional utilities
 Package: python3-toolz
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}
-Description: List processing tools and functional utilities
+Description: List processing tools and functional utilities for Python 3
  A set of utility functions for iterators, functions, and
  dictionaries.  These functions interoperate well and form the
  building blocks of common data analytic operations. They extend the
