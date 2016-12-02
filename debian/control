@@ -15,49 +15,22 @@ Package: python-toolz
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}
 Description: List processing tools and functional utilities
- Toolz
- =====
+ A set of utility functions for iterators, functions, and
+ dictionaries.  These functions interoperate well and form the
+ building blocks of common data analytic operations. They extend the
+ standard libraries itertools and functools and borrow heavily from
+ the standard libraries of contemporary functional languages.
  .
- |Build Status| |Coverage Status| |Version Status| |Downloads|
- .
- A set of utility functions for iterators, functions, and dictionaries.
- .
- See the PyToolz documentation at http://toolz.readthedocs.org
- .
- LICENSE
- -------
- .
- New BSD. See `License File <https://github.com/pytoolz/toolz/blob/master/LICENSE.txt>`__.
- .
- Install
- -------
- .
- ``toolz`` is on the Python Package Index (PyPI):
- .
- ::
+ This contains the Python 2 version
 
 Package: python3-toolz
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}
 Description: List processing tools and functional utilities
- Toolz
- =====
+ A set of utility functions for iterators, functions, and
+ dictionaries.  These functions interoperate well and form the
+ building blocks of common data analytic operations. They extend the
+ standard libraries itertools and functools and borrow heavily from
+ the standard libraries of contemporary functional languages.
  .
- |Build Status| |Coverage Status| |Version Status| |Downloads|
- .
- A set of utility functions for iterators, functions, and dictionaries.
- .
- See the PyToolz documentation at http://toolz.readthedocs.org
- .
- LICENSE
- -------
- .
- New BSD. See `License File <https://github.com/pytoolz/toolz/blob/master/LICENSE.txt>`__.
- .
- Install
- -------
- .
- ``toolz`` is on the Python Package Index (PyPI):
- .
- ::
-
+ This contains the Python 3 version
