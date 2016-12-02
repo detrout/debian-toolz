@@ -17,4 +17,6 @@ sorted = sorted
 # Aliases
 comp = compose
 
-__version__ = '0.7.4'
+functoolz._sigs.create_signature_registry()
+
+__version__ = '0.8.0'

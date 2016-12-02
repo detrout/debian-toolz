@@ -3,7 +3,9 @@ import heapq
 import collections
 import operator
 from functools import partial
-from toolz.compatibility import (map, filterfalse, zip, zip_longest, iteritems)
+from random import Random
+from toolz.compatibility import (map, filterfalse, zip, zip_longest, iteritems,
+                                 filter)
 from toolz.utils import no_default
 
 
@@ -12,7 +14,7 @@ __all__ = ('remove', 'accumulate', 'groupby', 'merge_sorted', 'interleave',
            'first', 'second', 'nth', 'last', 'get', 'concat', 'concatv',
            'mapcat', 'cons', 'interpose', 'frequencies', 'reduceby', 'iterate',
            'sliding_window', 'partition', 'partition_all', 'count', 'pluck',
-           'join', 'tail', 'diff', 'topk', 'peek')
+           'join', 'tail', 'diff', 'topk', 'peek', 'random_sample')
 
 
 def remove(predicate, seq):
@@ -54,7 +56,7 @@ def accumulate(binop, seq, initial=no_default):
         itertools.accumulate :  In standard itertools for Python 3.2+
     """
     seq = iter(seq)
-    result = next(seq) if initial is no_default else initial
+    result = next(seq) if initial == no_default else initial
     yield result
     for elem in seq:
         result = binop(result, elem)
@@ -395,7 +397,7 @@ def get(ind, seq, default=no_default):
         return seq[ind]
     except TypeError:  # `ind` may be a list
         if isinstance(ind, list):
-            if default is no_default:
+            if default == no_default:
                 if len(ind) > 1:
                     return operator.itemgetter(*ind)(seq)
                 elif ind:
@@ -404,12 +406,12 @@ def get(ind, seq, default=no_default):
                     return ()
             else:
                 return tuple(_get(i, seq, default) for i in ind)
-        elif default is not no_default:
+        elif default != no_default:
             return default
         else:
             raise
     except (KeyError, IndexError):  # we know `ind` is not a list
-        if default is no_default:
+        if default == no_default:
             raise
         else:
             return default
@@ -553,7 +555,8 @@ def reduceby(key, binop, seq, init=no_default):
     {True:  set([2, 4]),
      False: set([1, 3])}
     """
-    if init is not no_default and not callable(init):
+    is_no_default = init == no_default
+    if not is_no_default and not callable(init):
         _init = init
         init = lambda: _init
     if not callable(key):
@@ -562,7 +565,7 @@ def reduceby(key, binop, seq, init=no_default):
     for item in seq:
         k = key(item)
         if k not in d:
-            if init is no_default:
+            if is_no_default:
                 d[k] = item
                 continue
             else:
@@ -595,7 +598,6 @@ def iterate(func, x):
     4
     >>> next(powers_of_two)
     8
-
     """
     while True:
         yield x
@@ -720,7 +722,7 @@ def pluck(ind, seqs, default=no_default):
         get
         map
     """
-    if default is no_default:
+    if default == no_default:
         get = getter(ind)
         return map(get, seqs)
     elif isinstance(ind, list):
@@ -804,6 +806,7 @@ def join(leftkey, leftseq, rightkey, rightseq,
     d = groupby(leftkey, leftseq)
     seen_keys = set()
 
+    left_default_is_no_default = (left_default == no_default)
     for item in rightseq:
         key = rightkey(item)
         seen_keys.add(key)
@@ -812,10 +815,10 @@ def join(leftkey, leftseq, rightkey, rightseq,
             for match in left_matches:
                 yield (match, item)
         except KeyError:
-            if left_default is not no_default:
+            if not left_default_is_no_default:
                 yield (left_default, item)
 
-    if right_default is not no_default:
+    if right_default != no_default:
         for key, matches in d.items():
             if key not in seen_keys:
                 for match in matches:
@@ -846,7 +849,7 @@ def diff(*seqs, **kwargs):
     if N < 2:
         raise TypeError('Too few sequences given (min 2 required)')
     default = kwargs.get('default', no_default)
-    if default is no_default:
+    if default == no_default:
         iters = zip(*seqs)
     else:
         iters = zip_longest(*seqs, fillvalue=default)
@@ -863,8 +866,7 @@ def diff(*seqs, **kwargs):
 
 
 def topk(k, seq, key=None):
-    """
-    Find the k largest elements of a sequence
+    """ Find the k largest elements of a sequence
 
     Operates lazily in ``n*log(k)`` time
 
@@ -879,7 +881,7 @@ def topk(k, seq, key=None):
     See also:
         heapq.nlargest
     """
-    if key and not callable(key):
+    if key is not None and not callable(key):
         key = getter(key)
     return tuple(heapq.nlargest(k, seq, key=key))
 
@@ -896,8 +898,44 @@ def peek(seq):
     0
     >>> list(seq)
     [0, 1, 2, 3, 4]
-
     """
     iterator = iter(seq)
     item = next(iterator)
     return item, itertools.chain([item], iterator)
+
+
+def random_sample(prob, seq, random_state=None):
+    """ Return elements from a sequence with probability of prob
+
+    Returns a lazy iterator of random items from seq.
+
+    ``random_sample`` considers each item independently and without
+    replacement. See below how the first time it returned 13 items and the
+    next time it returned 6 items.
+
+    >>> seq = list(range(100))
+    >>> list(random_sample(0.1, seq)) # doctest: +SKIP
+    [6, 9, 19, 35, 45, 50, 58, 62, 68, 72, 78, 86, 95]
+    >>> list(random_sample(0.1, seq)) # doctest: +SKIP
+    [6, 44, 54, 61, 69, 94]
+
+    Providing an integer seed for ``random_state`` will result in
+    deterministic sampling. Given the same seed it will return the same sample
+    every time.
+
+    >>> list(random_sample(0.1, seq, random_state=2016))
+    [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
+    >>> list(random_sample(0.1, seq, random_state=2016))
+    [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
+
+    ``random_state`` can also be any object with a method ``random`` that
+    returns floats between 0.0 and 1.0 (exclusive).
+
+    >>> from random import Random
+    >>> randobj = Random(2016)
+    >>> list(random_sample(0.1, seq, random_state=randobj))
+    [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
+    """
+    if not hasattr(random_state, 'random'):
+        random_state = Random(random_state)
+    return filter(lambda _: random_state.random() < prob, seq)

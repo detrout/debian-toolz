@@ -5,7 +5,7 @@ from toolz.compatibility import (map, zip, iteritems, iterkeys, itervalues,
 
 __all__ = ('merge', 'merge_with', 'valmap', 'keymap', 'itemmap',
            'valfilter', 'keyfilter', 'itemfilter',
-           'assoc', 'dissoc', 'update_in', 'get_in')
+           'assoc', 'dissoc', 'assoc_in', 'update_in', 'get_in')
 
 
 def _get_factory(f, kwargs):
@@ -182,8 +182,7 @@ def itemfilter(predicate, d, factory=dict):
 
 
 def assoc(d, key, value, factory=dict):
-    """
-    Return a new dict with new key value pair
+    """ Return a new dict with new key value pair
 
     New dict has d[key] set to value. Does not modify the initial dictionary.
 
@@ -198,8 +197,7 @@ def assoc(d, key, value, factory=dict):
 
 
 def dissoc(d, *keys):
-    """
-    Return a new dict with the given key(s) removed.
+    """ Return a new dict with the given key(s) removed.
 
     New dict has d[key] deleted for each supplied key.
     Does not modify the initial dictionary.
@@ -208,11 +206,29 @@ def dissoc(d, *keys):
     {'x': 1}
     >>> dissoc({'x': 1, 'y': 2}, 'y', 'x')
     {}
+    >>> dissoc({'x': 1}, 'y') # Ignores missing keys
+    {'x': 1}
     """
     d2 = copy.copy(d)
     for key in keys:
-        del d2[key]
+        if key in d2:
+            del d2[key]
     return d2
+
+
+def assoc_in(d, keys, value, factory=dict):
+    """ Return a new dict with new, potentially nested, key value pair
+
+    >>> purchase = {'name': 'Alice',
+    ...             'order': {'items': ['Apple', 'Orange'],
+    ...                       'costs': [0.50, 1.25]},
+    ...             'credit card': '5555-1234-1234-1234'}
+    >>> assoc_in(purchase, ['order', 'costs'], [0.25, 1.00]) # doctest: +SKIP
+    {'credit card': '5555-1234-1234-1234',
+     'name': 'Alice',
+     'purchase': {'costs': [0.25, 1.00], 'items': ['Apple', 'Orange']}}
+    """
+    return update_in(d, keys, lambda x: value, value, factory)
 
 
 def update_in(d, keys, func, default=None, factory=dict):
@@ -261,8 +277,7 @@ def update_in(d, keys, func, default=None, factory=dict):
 
 
 def get_in(keys, coll, default=None, no_default=False):
-    """
-    Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.
+    """ Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.
 
     If coll[i0][i1]...[iX] cannot be found, returns ``default``, unless
     ``no_default`` is specified, then it raises KeyError or IndexError.
